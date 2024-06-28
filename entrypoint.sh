@@ -40,7 +40,15 @@ cp -rf $BOOK_DIR/* /gitbook/
 cd /gitbook
 npm i colors@1.4.0 # for fixing gitbook-plugin-anchor-navigation-ex dependency issue (issue#3)
 cd -
-sh /root/custom-entrypoint.sh "gitbook init && gitbook install && gitbook build"
+gitbook init
+until INSTALL_LOG=$(gitbook install); do
+    INSTALL_LOG="${INSTALL_LOG##*$'\n'}"
+    INSTALL_LOG="${INSTALL_LOG#*\"}"
+    INSTALL_LOG="${INSTALL_LOG%\"*}"
+    echo "[INFO] Retry installing \"${INSTALL_LOG}\"."
+    npm i "gitbook-plugin-${INSTALL_LOG}"
+done
+sh /root/custom-entrypoint.sh 'gitbook build'
 checkIfErr
 ls -al /gitbook/_book
 checkIfErr
