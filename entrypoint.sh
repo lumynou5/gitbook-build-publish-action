@@ -38,8 +38,6 @@ echo '[INFO] Start to build Gitbook static files...'
 ls -al
 cp -rf $BOOK_DIR/* /gitbook/
 cd /gitbook
-npm i colors@1.4.0 # for fixing gitbook-plugin-anchor-navigation-ex dependency issue (issue#3)
-cd -
 gitbook init
 until INSTALL_LOG=$(gitbook install); do
     INSTALL_LOG="${INSTALL_LOG##*$'\n'}"
